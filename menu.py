@@ -13,10 +13,10 @@ start_button = pygame.Rect(346, 264, 112, 32)
 difficulty_button = pygame.Rect(278, 465, 263, 30)
 quit_button = pygame.Rect(345, 664, 109, 32)
 
-easy_button = pygame.Rect(345, 250, 100, 40)
-medium_button = pygame.Rect(345, 350, 130, 40)
-hard_button = pygame.Rect(345, 450, 100, 40)
-back_button = pygame.Rect(345, 600, 100, 40)
+easy_button = pygame.Rect(346, 254, 464-346, 285-254)
+easy_button = pygame.Rect(346, 254, 464-346, 285-254)
+hard_button = pygame.Rect(347, 495, 471-347, 526-495)
+back_button = pygame.Rect(348, 614, 469-348, 644-614)
 
 
 
@@ -125,12 +125,20 @@ while difficulty_run:
 
 
     # debug rectangles
-##    pygame.draw.rect(SCREEN, (255,0,0), easy_button, 1)
-##    pygame.draw.rect(SCREEN, (255,255,0), medium_button, 1)
-##    pygame.draw.rect(SCREEN, (0,0,255), hard_button, 1)
-##    pygame.draw.rect(SCREEN, (0,255,255), back_button, 1)
+    pygame.draw.rect(SCREEN, (255,0,0), easy_button, 1)
+    pygame.draw.rect(SCREEN, (255,255,0), medium_button, 1)
+    pygame.draw.rect(SCREEN, (0,0,255), hard_button, 1)
+    pygame.draw.rect(SCREEN, (0,255,255), back_button, 1)
 
 
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            difficulty_run = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            print("Mouse clicked at:", event.pos)  # <-- add this line
+
+
+            
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
