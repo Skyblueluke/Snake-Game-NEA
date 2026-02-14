@@ -48,11 +48,13 @@ while running:
             if menu_run:
                 if start_button.collidepoint(event.pos):
                     print("Play pressed")
+                    menu_run = False
                     game_run = True
                 elif difficulty_button.collidepoint(event.pos):
                     print("Difficulty pressed")
                     menu_run = False
                     difficulty_run = True
+                    game_run = False
                 elif quit_button.collidepoint(event.pos):
                     running = False
             elif difficulty_run:
@@ -95,6 +97,25 @@ while running:
         pygame.draw.rect(SCREEN, (0,0,255), hard_button, 1)
         pygame.draw.rect(SCREEN, (0,255,255), back_button, 1)
 
+    elif game_run:
+        SCREEN.fill(black)
+
+        write_text("SNAKE GAME", header, text_colour, 200, 50)
+
+        if selected_difficulty is None:
+            write_text("Difficulty: Not selected", font, text_colour, 200, 200)
+        else:
+            write_text("Difficulty:" + selected_difficulty, font, text_colour, 200, 200)
+
+        write_text("Press ESC to return to menu", font, text_colour, 150, 400)
+
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE and game_run:
+                    game_run = False
+                    menu_run = True
+
+                        
     pygame.display.update()
 
 pygame.quit()
