@@ -7,7 +7,8 @@ running = True
 menu_run = True
 difficulty_run = False
 game_run = False
-selected_difficulty = None
+selected_difficulty = "Medium"
+snake_speed = 13
 
 # Rects
 start_button = pygame.Rect(346, 264, 112, 32)
@@ -62,14 +63,17 @@ while running:
                     selected_difficulty = "Easy"
                     difficulty_run = False
                     menu_run = True
+                    snake_speed = 8
                 elif medium_button.collidepoint(event.pos):
                     selected_difficulty = "Medium"
                     difficulty_run = False
                     menu_run = True
+                    snake_speed = 13
                 elif hard_button.collidepoint(event.pos):
                     selected_difficulty = "Hard"
                     difficulty_run = False
                     menu_run = True
+                    snake_speed = 18
                 elif back_button.collidepoint(event.pos):
                     difficulty_run = False
                     menu_run = True
@@ -102,10 +106,7 @@ while running:
 
         write_text("SNAKE GAME", header, text_colour, 200, 50)
 
-        if selected_difficulty is None:
-            write_text("Difficulty: Not selected", font, text_colour, 200, 200)
-        else:
-            write_text("Difficulty:" + selected_difficulty, font, text_colour, 200, 200)
+        write_text("Difficulty:" + selected_difficulty, font, text_colour, 200, 200)
 
         write_text("Press ESC to return to menu", font, text_colour, 150, 400)
 
