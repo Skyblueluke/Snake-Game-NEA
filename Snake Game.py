@@ -36,6 +36,11 @@ def write_text(text, font, text_colour, x, y):
     img = font.render(text, True, text_colour)
     SCREEN.blit(img, (x,y))
 
+#Grid
+BLOCK_SIZE = 20
+snake = [(400, 400), (380, 400), (360, 400)]
+direction = "RIGHT"
+
 # Main loop
 while running:
     SCREEN.fill(black)  # Clear screen at start of frame
@@ -104,11 +109,12 @@ while running:
     elif game_run:
         SCREEN.fill(black)
 
-        write_text("SNAKE GAME", header, text_colour, 200, 50)
-
-        write_text("Difficulty:" + selected_difficulty, font, text_colour, 200, 200)
-
-        write_text("Press ESC to return to menu", font, text_colour, 150, 400)
+        for segment in snake:
+            pygame.draw.rect(
+                SCREEN,
+                green,
+                pygame.Rect(segment[0], segment[1], BLOCK_SIZE, BLOCK_SIZE)
+            )
 
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
