@@ -9,6 +9,7 @@ running = True # This is the whole game loop (always active)
 menu_run = True # This is the menu loop (currently active)
 difficulty_run = False # This is the difficuty loop (currently inactive)
 game_run = False # This is the playing lood (currently inactive)
+game_over = False # This is for when the snake collides
 selected_difficulty = "Medium" # This is the game difficulty variable initially set at medium
 snake_speed = 13 # This is the snake speed which is a linked variable to the difficulty
 
@@ -56,7 +57,10 @@ def spawn_apple(): # This makes the function 'spawn_apple'
         y = random.randrange(0, (HEIGHT - BLOCK_SIZE) // BLOCK_SIZE) * BLOCK_SIZE # Anywhere depthwise in the window
         if (x, y) not in snake: # If it is not on the snake
             return (x, y) # Place it
-        
+
+#Clock
+clock = pygame.time.Clock() # This makes a clock that the game will run by
+
 # Main loop
 while running: # This is the beginning of the actual loop - running is always True
     SCREEN.fill(black)  # Clear screen at start of frame
@@ -67,14 +71,14 @@ while running: # This is the beginning of the actual loop - running is always Tr
             running = False # This is the end of the running loop
 
         # Moving the snake
-        if event.type == pygame.KEYDOWN and game_run: # If a key is pressed loop
-            if event.key == pygame.K_w and direction != "DOWN": # If w is pressed and not going in opposite direction
+        elif event.type == pygame.KEYDOWN and game_run: # If a key is pressed loop
+            if event.key == pygame.K_w: # If w is pressed
                 change_to = "UP" # Change next snake direction to up
-            elif event.key == pygame.K_s and direction != "UP": # If s is pressed and not going in opposite direction
+            elif event.key == pygame.K_s: # If s is pressed
                 change_to = "DOWN" # Change next snake direction to up
-            elif event.key == pygame.K_a and direction != "RIGHT": # If a is pressed and not going in opposite direction
+            elif event.key == pygame.K_a: # If a is pressed
                 change_to = "LEFT" # Change next snake direction to up
-            elif event.key == pygame.K_d and direction != "LEFT": # If d is pressed and not going in opposite direction
+            elif event.key == pygame.K_d: # If d is pressed
                 change_to = "RIGHT" # Change next snake direction to up
 
         elif event.type == pygame.MOUSEBUTTONDOWN: # If the mouse is clicked loop
@@ -111,8 +115,6 @@ while running: # This is the beginning of the actual loop - running is always Tr
                     difficulty_run = False  # Difficulty menu loop ends
                     menu_run = True # Menu loop starts again
 
-               
-
                 for event in pygame.event.get(): # This is the beginning of the loop that says if x happens do y
                     if event.type == pygame.KEYDOWN: # If a key is pressed loop
                         if event.key == pygame.K_ESCAPE and game_run: # If k is pressed and the play loop is active
@@ -144,68 +146,89 @@ while running: # This is the beginning of the actual loop - running is always Tr
 
     elif game_run: # If the playing loop is running
         SCREEN.fill(black) # Make the whole window black
-
+        
         # Making the snake
         for segment in snake: # This established the snake as a list of segments (These segments will becom ea tuple)
             pygame.draw.rect(SCREEN, green, pygame.Rect(segment[0], segment[1], BLOCK_SIZE, BLOCK_SIZE)) # Draws a green recangle on the screen with a tuple of segments
-
-            #Stopping illegal moves
-            if change_to == "UP" and direction != "DOWN": # If the direction is up and next direction is not down
-                direction = "UP" # Make new direction up
-            elif change_to == "DOWN" and direction != "UP": # If the direction is down and next direction is not up
-                direction = "DOWN" # Make new direction down
-            elif change_to == "LEFT" and direction != "RIGHT": # If the direction is left and next direction is not right
-                direction = "LEFT" # Make new direction left
-            elif change_to == "RIGHT" and direction != "LEFT": # If the direction is right and next direction is not left
-                direction = "RIGHT" # Make new direction right
-                #This means the snake will only move legally
 
             # Making the apple
             pygame.draw.rect(SCREEN,(255, 0, 0),pygame.Rect(apple_pos[0], apple_pos[1], BLOCK_SIZE, BLOCK_SIZE))# Draws a red square on the screen as a single segment
 
       
-
+        #Stopping illegal moves
+        if change_to == "UP" and direction != "DOWN": # If the direction is up and next direction is not down
+            direction = "UP" # Make new direction up
+        elif change_to == "DOWN" and direction != "UP": # If the direction is down and next direction is not up
+            direction = "DOWN" # Make new direction down
+        elif change_to == "LEFT" and direction != "RIGHT": # If the direction is left and next direction is not right
+            direction = "LEFT" # Make new direction left
+        elif change_to == "RIGHT" and direction != "LEFT": # If the direction is right and next direction is not left
+            direction = "RIGHT" # Make new direction right
+            #This means the snake will only move legally
 
             # Move snake head
-            x, y = snake[0] # This splits the snake's head into an x and y co ordinate
+        x, y = snake[0] # This splits the snake's head into an x and y co ordinate
 
-            if direction == "UP": # If the current direction is up
-                y -= BLOCK_SIZE # Y co ordinate decreases
-            elif direction == "DOWN": # If the current direction is up
-                y += BLOCK_SIZE # Y co ordinate increases
-            elif direction == "LEFT": # If the current direction is up
-                x -= BLOCK_SIZE # X co ordinate decreases
-            elif direction == "RIGHT": # If the current direction is up
-                x += BLOCK_SIZE # X co ordinate increases
+        if direction == "UP": # If the current direction is up
+            y -= BLOCK_SIZE # Y co ordinate decreases
+        elif direction == "DOWN": # If the current direction is up
+            y += BLOCK_SIZE # Y co ordinate increases
+        elif direction == "LEFT": # If the current direction is up
+            x -= BLOCK_SIZE # X co ordinate decreases
+        elif direction == "RIGHT": # If the current direction is up
+            x += BLOCK_SIZE # X co ordinate increases
 
-            snake.insert(0, (x, y)) # This adds a new head in front of the last head
+##            x, y = snake[0] # This is the current head
+##
+##            if direction == "UP": # If the current direction is up
+##                y -= BLOCK_SIZE # Y co ordinate decreases
+##            elif direction == "DOWN": # If the current direction is down
+##                y += BLOCK_SIZE # Y co ordinate increases
+##            elif direction == "LEFT": # If the current direction is left
+##                x -= BLOCK_SIZE # X co ordinate decreases
+##            elif direction == "RIGHT": # If the current direction is right
+##                x += BLOCK_SIZE # X co ordinate increases
+##
+        # Wall collision
+        if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT: # If past left - right or top - bottom
+            print("You hit a wall!") # Hit wall
+            game_run = False # Playing loop ends
+            game_over = True # Game over loop starts
+            snake = [(400, 400), (380, 400), (360, 400)]  # Snake position resets
+            direction = "RIGHT"  # Direction resets to right
+            change_to = direction # Next direction becomes current direction
+            apple_pos = spawn_apple()  # Apples reset
+
+        # Snake on snake collision
+        elif (x, y) in snake: # If head is in snake
+            game_run = False  # Playing loop ends
+            game_over = True   # Game over loop starts
+            snake = [(400, 400), (380, 400), (360, 400)]  # Snake position resets
+            direction = "RIGHT"  # Direction resets to right
+            change_to = direction # Next direction becomes current direction
+            apple_pos = spawn_apple()  # Apples reset
+
+        if game_over:
+            print("You hit the wall!" if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT else "You hit yourself!") # If you hit yourself or the wall
+            game_run = False       # Playing loop ends
+            menu_run = True        # Menu loop starts again
+            snake = [(400, 400), (380, 400), (360, 400)]  # Snake position and size resents
+            direction = "RIGHT"    # Direction resets
+            change_to = direction  # Next direction resets
+            apple_pos = spawn_apple()  # New apple spawns
+            game_over = False      # Game over loop ends
+
+        new_head = (x, y) # This makes the new head
+        snake.insert(0, new_head) # This visually adds it
+
+        # Apple collision
+        if new_head == apple_pos: # If the apple and snake collide
+            apple_pos = spawn_apple()  # The snake grows
+        else: # If the apple and the snake do not collide
             snake.pop() # This removes the final part of the tail, giving the illusion that the snake moves
-
-
-            x, y = snake[0]
-
-            if direction == "UP": # If the current direction is up
-                y -= BLOCK_SIZE # Y co ordinate decreases
-            elif direction == "DOWN": # If the current direction is down
-                y += BLOCK_SIZE # Y co ordinate increases
-            elif direction == "LEFT": # If the current direction is left
-                x -= BLOCK_SIZE # X co ordinate decreases
-            elif direction == "RIGHT": # If the current direction is right
-                x += BLOCK_SIZE # X co ordinate increases
-
-            new_head = (x, y) # This makes the new head
-            snake.insert(0, new_head) # This visually adds it
-
-            # Apple collision
-            if new_head == apple_pos: # If the apple and snake collide
-                apple_pos = spawn_apple()  # The snake grows
-            else: # If the apple and the snake do not collide
-                snake.pop() # This removes the final part of the tail, giving the illusion that the snake moves
 
             for segment in snake: # For each part of the snake
                 pygame.draw.rect(SCREEN, green, pygame.Rect(segment[0], segment[1], BLOCK_SIZE, BLOCK_SIZE)) # This draws a green tuple-based rectangle
-
-            clock = pygame.time.Clock() # This makes a clock that the game will run by
 
             clock.tick(snake_speed) # The clock is directly linked the the difficulty and snake speed
                         
