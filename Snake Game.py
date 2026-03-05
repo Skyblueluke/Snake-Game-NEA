@@ -121,6 +121,16 @@ while running: # This is the beginning of the actual loop - running is always Tr
                             game_run = False # Playing menu loop ends
                             menu_run = True # Menu loop starts again
 
+                #Game over event
+                if event.type == pygame.KEYDOWN: # If a key is pressed loop
+                    if game_over and event.key == pygame.K_SPACE: # If game over and space bar pressed
+                        game_over = False # Game over loop ends
+                        menu_run = True # Menu loop restarts
+                        snake = [(400, 400), (380, 400), (360, 400)] # Snake position resets
+                        direction = "RIGHT" # Current direction resets
+                        change_to = direction # Next direction resets
+                        apple_pos = spawn_apple() # Apples resets
+
     # Draw the appropriate menu
     if menu_run: # If the menu loop is running
         write_text("SNAKE", header, text_colour, 250, 50) #Write SNAKE in the header font (established in the fonts section)
@@ -190,33 +200,55 @@ while running: # This is the beginning of the actual loop - running is always Tr
 ##                x += BLOCK_SIZE # X co ordinate increases
 ##
         # Wall collision
-        if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT: # If past left - right or top - bottom
-            print("You hit a wall!") # Hit wall
-            game_run = False # Playing loop ends
-            game_over = True # Game over loop starts
-            snake = [(400, 400), (380, 400), (360, 400)]  # Snake position resets
-            direction = "RIGHT"  # Direction resets to right
-            change_to = direction # Next direction becomes current direction
-            apple_pos = spawn_apple()  # Apples reset
+##        if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT: # If past left - right or top - bottom
+##            print("You hit a wall!") # Hit wall
+##            game_run = False # Playing loop ends
+##            game_over = True # Game over loop starts
+##            snake = [(400, 400), (380, 400), (360, 400)]  # Snake position resets
+##            direction = "RIGHT"  # Direction resets to right
+##            change_to = direction # Next direction becomes current direction
+##            apple_pos = spawn_apple()  # Apples reset
+##
+##        # Snake on snake collision
+##        elif (x, y) in snake: # If head is in snake
+##            game_run = False  # Playing loop ends
+##            game_over = True   # Game over loop starts
+##            snake = [(400, 400), (380, 400), (360, 400)]  # Snake position resets
+##            direction = "RIGHT"  # Direction resets to right
+##            change_to = direction # Next direction becomes current direction
+##            apple_pos = spawn_apple()  # Apples reset
+##            continue # This makes the reset actually happen
 
-        # Snake on snake collision
-        elif (x, y) in snake: # If head is in snake
-            game_run = False  # Playing loop ends
-            game_over = True   # Game over loop starts
-            snake = [(400, 400), (380, 400), (360, 400)]  # Snake position resets
-            direction = "RIGHT"  # Direction resets to right
-            change_to = direction # Next direction becomes current direction
-            apple_pos = spawn_apple()  # Apples reset
-
-        if game_over:
+        if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT or (x, y) in snake: # If out of bounds or huit self
             print("You hit the wall!" if x < 0 or x >= WIDTH or y < 0 or y >= HEIGHT else "You hit yourself!") # If you hit yourself or the wall
-            game_run = False       # Playing loop ends
-            menu_run = True        # Menu loop starts again
+            game_run = False # Playing loop ends
+            game_over = True # Game loop starts again
+
+            if game_over:  # If game over loop is active
+                SCREEN.fill(black) # Fill the whole screen as black
+                write_text("GAME OVER", header, green, 200, 200) # Game over message with premade header font
+                write_text(f"SCORE: {len(snake)-3}", font, green, 320, 320) # Display score in normal premade font
+                write_text("PRESS SPACE TO RETURN TO MENU", font, green, 150, 400) # Message in normal premade font
+                pygame.display.update() # Update the screens display
+                waiting = True # Waitingf= for player to press spacebar
+                while waiting: # While waiting loop is active
+                    for event in pygame.event.get(): # If event loop
+                        if event.type == pygame.QUIT: # If player quits
+                            running = False # Running (main) loop stops
+                            waiting = False # Spacebar loop stops
+                        if event.type == pygame.KEYDOWN: # If spacebar pressed loop
+                            if event.key == pygame.K_SPACE: # Spacebar loop active
+                                game_over = False # Game over loop ends
+                                waiting = False # Waiting loop ends
+                                menu_run = True # Menu loop restars
+                                game_run = False # Playing loop ends
+                                continue # This makes the reset actually happen       
             snake = [(400, 400), (380, 400), (360, 400)]  # Snake position and size resents
             direction = "RIGHT"    # Direction resets
             change_to = direction  # Next direction resets
             apple_pos = spawn_apple()  # New apple spawns
             game_over = False      # Game over loop ends
+            continue # This makes the reset actually happen
 
         new_head = (x, y) # This makes the new head
         snake.insert(0, new_head) # This visually adds it
