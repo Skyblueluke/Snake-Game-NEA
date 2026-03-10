@@ -41,6 +41,7 @@ pygame.display.set_caption("Snake Game")  # This is the nig Snake Game message a
 # Fonts
 header = pygame.font.SysFont("arialblack", 80)  # This is the header font being established
 font = pygame.font.SysFont("arialblack", 40)  # This is the standard font being established
+ui_font = pygame.font.SysFont("arialblack", 25) # This is the top corner font being established
 text_colour = green  # This is the font colour being established
 
 
@@ -75,7 +76,7 @@ while running:  # This is the beginning of the actual loop - running is always T
 
     # Event handling
     for event in pygame.event.get():  # This is the beginning of the loop that says if x happens do y
-        print(pygame.mouse.get_pos())
+##        print(pygame.mouse.get_pos())
         if event.type == pygame.QUIT:  # This is for the quit button, it will end the program, and this ends the running loop
             running = False  # This is the end of the running loop
 
@@ -197,6 +198,8 @@ while running:  # This is the beginning of the actual loop - running is always T
     elif game_run:  # If the playing loop is running
         SCREEN.fill(black)  # Make the whole window black
 
+        write_text("Score: " + str(len(snake) - 3), ui_font, green, 10, 10) # This is the score in the top corner
+        write_text("Difficulty: " + selected_difficulty, ui_font, green, 10, 50) # This is the difficulty in the top corner
         # Making the snake
         for segment in snake:  # This established the snake as a list of segments (These segments will becom ea tuple)
             pygame.draw.rect(SCREEN, green, pygame.Rect(segment[0], segment[1], BLOCK_SIZE,
