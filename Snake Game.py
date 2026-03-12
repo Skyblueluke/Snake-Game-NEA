@@ -29,7 +29,7 @@ quit_button = pygame.Rect(345, 624, 109, 32)  # There are the quid button co ord
 easy_button = pygame.Rect(346, 254, 464 - 346, 285 - 254)  # These are the easy  button co ordinates
 medium_button = pygame.Rect(317, 374, 496 - 317, 404 - 374)  # These are the medium  button co ordinates
 hard_button = pygame.Rect(347, 495, 471 - 347, 526 - 495)  # These are the play  hard co ordinates
-back_button = pygame.Rect(348, 614, 469 - 348, 644 - 614)  # These are the play  back co ordinates
+back_button = pygame.Rect(348, 614, 469 - 348, 644 - 614)# These are the play  back co ordinates
 
 # Screen and colours
 WIDTH, HEIGHT = 800, 680  # This is the window size
@@ -133,20 +133,20 @@ while running:  # This is the beginning of the actual loop - running is always T
                 if easy_button.collidepoint(
                         event.pos):  # # If the mouse is clicked on the easy button (established in the rects section)
                     selected_difficulty = "Easy"  # The difficulty is set to easy
-                    difficulty_run = False  # Difficulty menu loop ends
-                    menu_run = True  # Menu loop starts again
+##                    difficulty_run = False  # Difficulty menu loop ends
+##                    menu_run = True  # Menu loop starts again
                     snake_speed = 8  # This is the snakes speed in the easy difficulty
                 elif medium_button.collidepoint(
                         event.pos):  # If the mouse is clicked on the medium button (established in the rects section)
                     selected_difficulty = "Medium"  # The difficulty is set to medium
-                    difficulty_run = False  # Difficulty menu loop ends
-                    menu_run = True  # Menu loop starts again
+##                    difficulty_run = False  # Difficulty menu loop ends
+##                    menu_run = True  # Menu loop starts again
                     snake_speed = 13  # This is the snakes speed in the medium difficulty
                 elif hard_button.collidepoint(
                         event.pos):  # If the mouse is clicked on the hard button (established in the rects section)
                     selected_difficulty = "Hard"  # The difficulty is set to hard
-                    difficulty_run = False  # Difficulty menu loop ends
-                    menu_run = True  # Menu loop starts again
+##                    difficulty_run = False  # Difficulty menu loop ends
+##                    menu_run = True  # Menu loop starts again
                     snake_speed = 18  # This is the snakes speed in the hard difficulty
                 elif back_button.collidepoint(
                         event.pos):  # If the mouse is clicked on the back button (established in the rects section)
@@ -174,9 +174,9 @@ while running:  # This is the beginning of the actual loop - running is always T
         write_text("QUIT", font, text_colour, 345,
                    610)  # Write QUIT in the standard font (established in the fonts section)
 
-        pygame.draw.rect(SCREEN, (255, 0, 0), play_button, 1) # Makes a hitbox in red around the play button for debugging purposes
-        pygame.draw.rect(SCREEN, (0, 255, 0), difficulty_button, 1) # Makes a hitbox in red around the difficulty button for debugging purposes
-        pygame.draw.rect(SCREEN, (0, 0, 255), quit_button, 1) # Makes a hitbox in red around the quit button for debugging purposes
+##        pygame.draw.rect(SCREEN, (255, 0, 0), play_button, 1) # Makes a hitbox in red around the play button for debugging purposes
+##        pygame.draw.rect(SCREEN, (0, 255, 0), difficulty_button, 1) # Makes a hitbox in red around the difficulty button for debugging purposes
+##        pygame.draw.rect(SCREEN, (0, 0, 255), quit_button, 1) # Makes a hitbox in red around the quit button for debugging purposes
 
     elif difficulty_run:  # If the difficulty loop is running
         write_text("DIFFICULTY", header, text_colour, 150,
@@ -190,10 +190,23 @@ while running:  # This is the beginning of the actual loop - running is always T
         write_text("BACK", font, text_colour, 345,
                    600)  # Write BACK in the standard font (established in the fonts section
 
-        pygame.draw.rect(SCREEN, (255,0,0), easy_button, 1) # Makes a hitbox in red around the easy button for debugging purposes
-        pygame.draw.rect(SCREEN, (255,255,0), medium_button, 1) # Makes a hitbox in red around the medium button for debugging purposes
-        pygame.draw.rect(SCREEN, (0,0,255), hard_button, 1) # Makes a hitbox in red around the hard button for debugging purposes
-        pygame.draw.rect(SCREEN, (0,255,255), back_button, 1) # Makes a hitbox in red around the back button for debugging purposes
+        # Highlight selected difficulty
+        if selected_difficulty == "Easy": # If easy difficulty is selected
+            highlight = easy_button.inflate(30, 20) # Grow the hitbox
+            pygame.draw.rect(SCREEN, green, easy_button, 3) # Make hitbox in easy green
+
+        elif selected_difficulty == "Medium": # If medium difficulty is selected
+            highlight = medium_button.inflate(30, 20) # Grow the hitbox
+            pygame.draw.rect(SCREEN, green, medium_button, 3) # Make hitbox in medium green
+
+        elif selected_difficulty == "Hard": # If hard difficulty is selected
+            highlight = hard_button.inflate(30, 20) # Grow the hitbox
+            pygame.draw.rect(SCREEN, green, hard_button, 3) # Make hitbox in hard green
+
+##        pygame.draw.rect(SCREEN, (255,0,0), easy_button, 1) # Makes a hitbox in red around the easy button for debugging purposes
+##        pygame.draw.rect(SCREEN, (255,255,0), medium_button, 1) # Makes a hitbox in red around the medium button for debugging purposes
+##        pygame.draw.rect(SCREEN, (0,0,255), hard_button, 1) # Makes a hitbox in red around the hard button for debugging purposes
+##        pygame.draw.rect(SCREEN, (0,255,255), back_button, 1) # Makes a hitbox in red around the back button for debugging purposes
 
     elif game_run:  # If the playing loop is running
         SCREEN.fill(black)  # Make the whole window black
