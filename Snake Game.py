@@ -192,16 +192,16 @@ while running:  # This is the beginning of the actual loop - running is always T
 
         # Highlight selected difficulty
         if selected_difficulty == "Easy": # If easy difficulty is selected
-            highlight = easy_button.inflate(30, 20) # Grow the hitbox
-            pygame.draw.rect(SCREEN, green, easy_button, 3) # Make hitbox in easy green
+            highlight = easy_button.inflate(60, 20) # Grow the hitbox
+            pygame.draw.rect(SCREEN, green, highlight, 3) # Make hitbox in easy green
 
         elif selected_difficulty == "Medium": # If medium difficulty is selected
             highlight = medium_button.inflate(30, 20) # Grow the hitbox
-            pygame.draw.rect(SCREEN, green, medium_button, 3) # Make hitbox in medium green
+            pygame.draw.rect(SCREEN, green, highlight, 3) # Make hitbox in medium green
 
         elif selected_difficulty == "Hard": # If hard difficulty is selected
             highlight = hard_button.inflate(30, 20) # Grow the hitbox
-            pygame.draw.rect(SCREEN, green, hard_button, 3) # Make hitbox in hard green
+            pygame.draw.rect(SCREEN, green, highlight, 3) # Make hitbox in hard green
 
 ##        pygame.draw.rect(SCREEN, (255,0,0), easy_button, 1) # Makes a hitbox in red around the easy button for debugging purposes
 ##        pygame.draw.rect(SCREEN, (255,255,0), medium_button, 1) # Makes a hitbox in red around the medium button for debugging purposes
