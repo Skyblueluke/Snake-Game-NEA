@@ -2,6 +2,8 @@ import pygame  # Imports pygame and pygame library
 
 import random  # Imports random for the apples
 
+import time  #  Imports time for timer
+
 pygame.init()  # Activates pygame
 
 # Flags
@@ -15,6 +17,9 @@ selected_difficulty = "Medium"  # This is the game difficulty variable initially
 snake_speed = 13  # This is the snake speed which is a linked variable to the difficulty
 TOP_MARGIN = 80  # This leaves space for score/difficulty at top
 high_score = 0  # This tracks the highest score achieved
+start_time = 0 # This is the starting time
+elapsed_time = 0 # This is the total time
+paused_time = 0 # This is the paused time for the menu
 
 # Snake settings
 BLOCK_SIZE = 20  # This is the size of a single grid square in pixels
@@ -123,6 +128,8 @@ while running:  # This is the beginning of the actual loop - running is always T
                     menu_run = False  # Menu loop ends
                     game_run = True  # Playing loop starts
                     apple_pos = spawn_apple()  # This is the start of the apple spawning process
+                    start_time = time.time() # Start timer
+                    paused_time = 0 # Reset timer
                 elif difficulty_button.collidepoint(
                         event.pos):  # If the mouse is clicked on the difficulty button (established in the rects section)
                     print(
@@ -215,10 +222,16 @@ while running:  # This is the beginning of the actual loop - running is always T
         SCREEN.fill(black)  # Make the whole window black
         pygame.draw.line(SCREEN, green, (0, TOP_MARGIN), (WIDTH, TOP_MARGIN), 2) # Make green margin  line 
 
+        elapsed_time = int(time.time() - start_time - paused_time) # Calculate time
+        minutes = elapsed_time // 60 # Minutes calculation
+        seconds = elapsed_time % 60 # Seconds calculation
+
+
         write_text("Score: " + str(len(snake) - 3), ui_font, green, 10, 10)  # This is the score in the top corner
         write_text("Difficulty: " + selected_difficulty, ui_font, green, 10,
                    50)  # This is the difficulty in the top corner
         write_text(f"High Score: {high_score}", ui_font, green, 600, 10) # This is the high score in the top corner
+        write_text(f"Time: {minutes:02}:{seconds:02}", ui_font, green, 600, 40) # This is the timer in the top corner
 
         score = len(snake) - 3  # Current game score
         if score > high_score:   # Update high score if beaten
@@ -298,6 +311,7 @@ while running:  # This is the beginning of the actual loop - running is always T
                 write_text(f"SCORE: {len(snake) - 3}", font, green, 290,
                             320)  # Display score in normal premade font
                 write_text("PRESS SPACE TO RETURN TO MENU", font, green, 1, 400)  # Message in normal premade font
+                write_text(f"TIME: {minutes:02}:{seconds:02}", font, green, 265, 360) # Display end time
                 pygame.display.update()  # Update the screens display
                 waiting = True  # Waitingf= for player to press spacebar
                 while waiting:  # While waiting loop is active
@@ -342,6 +356,8 @@ while running:  # This is the beginning of the actual loop - running is always T
 
     elif pause_run:  # Pause menu
 
+        pause_start = time.time() # Pause timer
+
         for segment in snake:  # For each part of the snake
                 pygame.draw.rect(SCREEN, green, pygame.Rect(segment[0], segment[1], BLOCK_SIZE, BLOCK_SIZE))  # This draws a green tuple-based rectangle (snake)
                 pygame.draw.rect(SCREEN, (255, 0, 0), pygame.Rect(apple_pos[0], apple_pos[1], BLOCK_SIZE, BLOCK_SIZE)) # This creates a red square (apple)
@@ -351,6 +367,9 @@ while running:  # This is the beginning of the actual loop - running is always T
                    50)  # This is the difficulty in the top corner
         write_text(f"High Score: {high_score}", ui_font, green, 600, 10) # This is the high score in the top corner
 
+        write_text(f"Time: {minutes:02}:{seconds:02}", ui_font, green, 600, 40) # This is the timer in the top corner
+
+
         pygame.draw.line(SCREEN, green, (0, TOP_MARGIN), (WIDTH, TOP_MARGIN), 2) # Make green margin  line 
 
     
@@ -358,10 +377,12 @@ while running:  # This is the beginning of the actual loop - running is always T
         overlay.fill((0, 0, 0, 150))  # this makes a semi-transparent black
         SCREEN.blit(overlay, (0, 0))  # this draws the overlay
 
-        write_text("PAUSED", header, green, 200, 200) # Write PAUSED in the header font (established in the fonts section)
-        write_text("PRESS P TO RESUME", font, green, 150, 350)  # Write PRESS P TO RESUME in the standard font (established in the fonts section)
-        write_text("PRESS ESC FOR MENU", font, green, 150, 420)  # Write PRESS ESC FOR MENU in the standard font (established in the fonts section)
+        write_text("PAUSED", header, green, 225, 200) # Write PAUSED in the header font (established in the fonts section)
+        write_text("PRESS P TO RESUME", font, green, 190, 350)  # Write PRESS P TO RESUME in the standard font (established in the fonts section)
+        write_text("PRESS ESC FOR MENU", font, green, 175, 420)  # Write PRESS ESC FOR MENU in the standard font (established in the fonts section)
 
+        paused_time += time.time() - pause_start # This adds the length of the pause to total pause time
+        
     pygame.display.update()  # This commands the screen to update at all times in the main loop
 
 pygame.quit()  # Closes the program
